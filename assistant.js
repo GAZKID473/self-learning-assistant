@@ -83,11 +83,7 @@ window.saveModule = () => {
   }
 };
 
-window.runVoiceInput = () => {
-  voiceInput();
-  memory.usedModules.push("voiceInput");
-};
-
+window.runVoiceInput = voiceInput;
 window.runVoiceOutput = voiceOutput;
 window.runTranslator = () => {
   translator();
@@ -100,6 +96,26 @@ function addChatMessage(sender, text) {
   msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
   log.appendChild(msg);
   log.scrollTop = log.scrollHeight;
+}
+
+async function queryLLM(message) {
+  const res = await fetch("http://localhost:3000/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await res.json();
+  const reply = data.reply || "Sorry, I couldn't generate a response.";
+  document.getElementById("output").textContent = reply;
+
+  addChatMessage("Assistant", respondWithPersonality(reply));
+
+  const utterance = new SpeechSynthesisUtterance(reply);
+  utterance.lang = 'en-US';
+  speechSynthesis.speak(utterance);
+
+  return reply;
 }
 
 window.handleChat = async () => {
@@ -146,7 +162,7 @@ window.handleChat = async () => {
   } else if (message.toLowerCase().includes("what modules have i used")) {
     addChatMessage("Assistant", `You've used: ${memory.usedModules.join(", ")}`);
   } else {
-    addChatMessage("Assistant", respondWithPersonality("Sorry, I didn’t understand that. Try asking about mood, voice, or translation."));
+    await queryLLM(message);
   }
 
   showSuggestions();
