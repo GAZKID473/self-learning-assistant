@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Self-Learning Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="assistant">
+    <div id="avatar">🤖</div>
+    <div id="output">Hello, Keone! Ready to evolve?</div>
+    <button onclick="runModule()">Run Mood Tracker</button>
+    <button onclick="openEditor()">Edit Module</button>
+    <button onclick="runVoiceInput()">🎙️ Voice Input</button>
+    <button onclick="runVoiceOutput()">🔊 Voice Output</button>
+    <button onclick="runTranslator()">🌍 Translate</button>
+  </div>
+
+  <div id="editorPanel" style="display:none;">
+    <h3>Edit moodTracker.js</h3>
+    <textarea id="editor"></textarea>
+    <button onclick="saveModule()">Save & Run</button>
+  </div>
+
+  <div id="chat">
+    <div id="chatLog"></div>
+    <input id="chatInput" type="text" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')handleChat()" />
+    <button onclick="handleChat()">Send</button>
+  </div>
+
+  <script type="module" src="assistant.js"></script>
+</body>
+</html>
