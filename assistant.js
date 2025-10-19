@@ -102,6 +102,23 @@ function addChatMessage(sender, text) {
   log.scrollTop = log.scrollHeight;
 }
 
+async function queryLLM(message) {
+  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": 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, // Replace with your actual key
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "gpt-4",
+      messages: [{ role: "user", content: message }]
+    })
+  });
+
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
 window.handleChat = async () => {
   const input = document.getElementById("chatInput");
   const message = input.value.trim();
@@ -146,4 +163,9 @@ window.handleChat = async () => {
   } else if (message.toLowerCase().includes("what modules have i used")) {
     addChatMessage("Assistant", `You've used: ${memory.usedModules.join(", ")}`);
   } else {
-    addChatMessage("Assistant", respondWithPersonality("I’m still learning — but I’ll
+    const response = await queryLLM(message);
+    addChatMessage("Assistant", respondWithPersonality(response));
+  }
+
+  showSuggestions();
+};
