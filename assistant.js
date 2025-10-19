@@ -146,8 +146,4 @@ window.handleChat = async () => {
   } else if (message.toLowerCase().includes("what modules have i used")) {
     addChatMessage("Assistant", `You've used: ${memory.usedModules.join(", ")}`);
   } else {
-    addChatMessage("Assistant", respondWithPersonality("Sorry, I didn’t understand that. Try asking about mood, voice, or translation."));
-  }
-
-  showSuggestions();
-};
+    addChatMessage("Assistant", respondWithPersonality("I’m still learning — but I’ll
